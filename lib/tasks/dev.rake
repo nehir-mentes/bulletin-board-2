@@ -9,6 +9,14 @@ task({ :sample_data => :environment }) do
   Board.destroy_all
   Post.destroy_all
   
+
+  usernames = ["alice", "bob", "carol", "dave", "eve"]
+  usernames.each do |username|
+    user = User.new
+    user.email = "#{username}@example.com"
+    user.password = "password"
+    user.save
+
   5.times do
     board = Board.new
     board.name = Faker::Address.community
