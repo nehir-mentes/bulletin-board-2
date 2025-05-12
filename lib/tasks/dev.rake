@@ -6,6 +6,7 @@ task({ :sample_data => :environment }) do
     ActiveRecord::Base.connection.reset_pk_sequence!(t)
   end
 
+  User.destroy_all
   Board.destroy_all
   Post.destroy_all
   
@@ -21,11 +22,13 @@ task({ :sample_data => :environment }) do
   5.times do
     board = Board.new
     board.name = Faker::Address.community
+    board.user_id = User.all.sample
     board.save
 
     rand(10..50).times do
       post = Post.new
       post.board_id = board.id
+      post.user_id= User.all.sample
       post.title = rand < 0.5 ? Faker::Commerce.product_name : Faker::Job.title
       post.body = Faker::Lorem.paragraphs(number: rand(1..5), supplemental: true).join("\n\n")
       post.created_at = Faker::Date.backward(days: 120)
@@ -36,4 +39,5 @@ task({ :sample_data => :environment }) do
 
   puts "There are now #{Board.count} rows in the boards table."
   puts "There are now #{Post.count} rows in the posts table."
+  puts "There are now #{User.count} rows in the users table."
 end
